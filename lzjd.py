@@ -1,4 +1,11 @@
-import xxhash
+"""
+Python implementation of Lempel Ziv Jaccard Distance
+
+Uses the implementation Murmurhash3 written by Hajime Senuma
+located at https://github.com/hajimes/mmh3, not the version which installs with pip
+"""
+
+import mmh3
 import heapq
 
 class LZJD_Hashifier:
@@ -22,10 +29,10 @@ class LZJD_Hashifier:
         return hasher.intdigest()
 
     def get_min_hashes(self, lzset):
-        return heapq.nsmallest(self.k, [self.hash_buffer(x) for x in lzset])
+        return heapq.nsmallest(self.k, [mmh3.hash(x, signed=False) for x in lzset])
 
     def get_signature_from_buffer(self, buffer):
-        return set(self.get_min_hashes(self.build_lz_set(buffer)))
+        return ''.join(['{:02x}'.format(x).zfill(8) for x in self.get_min_hashes(self.build_lz_set(buffer))])
 
 
 def get_lzjd_dist(buff1, buff2):
