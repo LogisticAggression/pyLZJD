@@ -23,11 +23,6 @@ class LZJD_Hashifier:
             end_index = end_index + 1
         return lzset
 
-    def hash_buffer(self, buffer):
-        hasher = xxhash.xxh32()
-        hasher.update(buffer)
-        return hasher.intdigest()
-
     def get_min_hashes(self, lzset):
         return heapq.nsmallest(self.k, [mmh3.hash(x, signed=False) for x in lzset])
 
